@@ -28,7 +28,7 @@ jobs:
         shell: bash
 
       - name: Build with Gradle
-        working-directory: ./spring-proejct
+        working-directory: ./spring-project
         run: ./gradlew build
         shell: bash
 
