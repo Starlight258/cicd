@@ -1,27 +1,14 @@
 version: 0.0
 os: linux
 files:
-  - source: /
+  - source: /spring-project
     destination: /home/ubuntu/spring-project
-    overwrite: yes
-
 permissions:
   - object: /home/ubuntu/spring-project
     pattern: "**"
     owner: ubuntu
     group: ubuntu
     mode: 755
-  - object: /home/ubuntu/spring-project
-    pattern: "*.jar"
-    owner: ubuntu
-    group: ubuntu
-    mode: 644
-  - object: /home/ubuntu/spring-project
-    pattern: "*.sh"
-    owner: ubuntu
-    group: ubuntu
-    mode: 755
-
 hooks:
   ApplicationStart:
     - location: spring-project/scripts/gh_deploy.sh
