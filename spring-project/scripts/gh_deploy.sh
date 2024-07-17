@@ -1,15 +1,11 @@
 #!/bin/bash
-set -e
+set -ex
 
-echo "Current user: $(whoami)"
-echo "Current directory: $(pwd)"
-echo "Script location: $0"
+echo "Deployment script started" >> $DEPLOY_LOG_PATH
 
-# 배포된 애플리케이션 디렉토리로 이동
 DEPLOY_DIR="/home/ubuntu/spring-project"
 cd $DEPLOY_DIR
-
-echo "Changed to directory: $(pwd)"
+echo "Changed to directory: $(pwd)" >> $DEPLOY_LOG_PATH
 
 PROJECT_NAME="spring-project"
 JAR_PATH="$DEPLOY_DIR/build/libs/*.jar"
@@ -19,7 +15,9 @@ APPLICATION_LOG_PATH="$DEPLOY_DIR/application.log"
 
 echo "===== 배포 시작 : $(date +%c) =====" >> $DEPLOY_LOG_PATH
 
-# JAR 파일 찾기
+echo "Listing build/libs directory:" >> $DEPLOY_LOG_PATH
+ls -la $DEPLOY_DIR/build/libs >> $DEPLOY_LOG_PATH
+
 BUILD_JAR=$(find $JAR_PATH -name '*.jar' | head -n 1)
 JAR_NAME=$(basename $BUILD_JAR)
 
@@ -32,15 +30,29 @@ if [ -z $CURRENT_PID ]
 then
   echo "> 현재 동작중인 애플리케이션 존재 X" >> $DEPLOY_LOG_PATH
 else
-  echo "> 현재 동작중인 애플리케이션 존재 O" >> $DEPLOY_LOG_PATH
-  echo "> 현재 동작중인 애플리케이션 강제 종료 진행" >> $DEPLOY_LOG_PATH
+  echo "> 현재 동작중인 애플리케이션 존재 O (PID: $CURRENT_PID)" >> $DEPLOY_LOG_PATH
+  echo "> 현재 동작중인 애플리케이션 종료 진행" >> $DEPLOY_LOG_PATH
   kill -15 $CURRENT_PID
   sleep 5
+  if kill -0 $CURRENT_PID 2>/dev/null; then
+    echo "> 애플리케이션이 정상적으로 종료되지 않았습니다. 강제 종료합니다." >> $DEPLOY_LOG_PATH
+    kill -9 $CURRENT_PID
+  fi
 fi
 
 echo "> $JAR_NAME 배포" >> $DEPLOY_LOG_PATH
-nohup java -jar $BUILD_JAR >> $APPLICATION_LOG_PATH 2> $DEPLOY_ERR_LOG_PATH &
+nohup java -jar $BUILD_JAR > $APPLICATION_LOG_PATH 2> $DEPLOY_ERR_LOG_PATH &
 
-sleep 3
+DEPLOY_PID=$!
+echo "> 배포된 애플리케이션 PID: $DEPLOY_PID" >> $DEPLOY_LOG_PATH
+
+sleep 10
+
+if kill -0 $DEPLOY_PID 2>/dev/null; then
+  echo "> 애플리케이션이 성공적으로 실행되었습니다." >> $DEPLOY_LOG_PATH
+else
+  echo "> 애플리케이션 실행 실패. 로그를 확인하세요." >> $DEPLOY_LOG_PATH
+  exit 1
+fi
 
 echo "> 배포 종료 : $(date +%c)" >> $DEPLOY_LOG_PATH
