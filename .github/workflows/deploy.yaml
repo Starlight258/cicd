@@ -39,8 +39,7 @@ jobs:
 
       - name: Make zip file
         run: |
-          cd spring-project
-          zip -r ../$GITHUB_SHA.zip .
+          zip -r $GITHUB_SHA.zip . -x "8.git*"
         shell: bash
 
       - name: Configure AWS credentials
