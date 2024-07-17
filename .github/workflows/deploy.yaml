@@ -33,12 +33,14 @@ jobs:
         shell: bash
 
       - name: Build with Gradle
+        run: ./spring-project/gradlew build
         working-directory: ./spring-project
-        run: ./gradlew build
         shell: bash
 
       - name: Make zip file
-        run: zip -r ./$GITHUB_SHA ./spring-project
+        run: |
+          cd spring-project
+          zip -r ../$GITHUB_SHA.zip .
         shell: bash
 
       - name: Configure AWS credentials
