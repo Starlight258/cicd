@@ -1,17 +1,24 @@
 #!/bin/bash
 set -ex
 
-echo "Deployment script started" >> $DEPLOY_LOG_PATH
-
+# 먼저 변수들을 정의합니다.
 DEPLOY_DIR="/home/ubuntu/spring-project"
-cd $DEPLOY_DIR
-echo "Changed to directory: $(pwd)" >> $DEPLOY_LOG_PATH
-
 PROJECT_NAME="spring-project"
-JAR_PATH="$DEPLOY_DIR/build/libs/*.jar"
 DEPLOY_LOG_PATH="$DEPLOY_DIR/deploy.log"
 DEPLOY_ERR_LOG_PATH="$DEPLOY_DIR/deploy_err.log"
 APPLICATION_LOG_PATH="$DEPLOY_DIR/application.log"
+
+# 로그 파일이 존재하지 않으면 생성합니다.
+mkdir -p $(dirname $DEPLOY_LOG_PATH)
+touch $DEPLOY_LOG_PATH
+
+echo "Deployment script started" >> $DEPLOY_LOG_PATH
+
+# 배포 디렉토리로 이동
+cd $DEPLOY_DIR || exit 1
+echo "Changed to directory: $(pwd)" >> $DEPLOY_LOG_PATH
+
+JAR_PATH="$DEPLOY_DIR/build/libs/*.jar"
 
 echo "===== 배포 시작 : $(date +%c) =====" >> $DEPLOY_LOG_PATH
 
