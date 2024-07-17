@@ -1,12 +1,12 @@
 version: 0.0
 os: linux
 files:
-  - source: /spring-project
-    destination: /home/ubuntu/github_action
+  - source: /
+    destination: /home/ubuntu/spring-project
     overwrite: yes
 
 permissions:
-  - object: /
+  - object: /home/ubuntu/spring-project
     pattern: "**"
     owner: ubuntu
     group: ubuntu
