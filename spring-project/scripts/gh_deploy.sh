@@ -1,5 +1,5 @@
 #!/bin/bash
-PROJECT_NAME="cicd"
+PROJECT_NAME="spring-project"
 JAR_PATH="/home/ubuntu/spring-project/build/libs/*.jar"
 DEPLOY_PATH=/home/ubuntu/$PROJECT_NAME/
 DEPLOY_LOG_PATH="/home/ubuntu/$PROJECT_NAME/deploy.log"
