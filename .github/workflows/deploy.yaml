@@ -39,7 +39,7 @@ jobs:
 
       - name: Make zip file
         run: |
-          zip -r $GITHUB_SHA.zip . -x "8.git*"
+          zip -r $GITHUB_SHA.zip . -x "*.git*"
         shell: bash
 
       - name: Configure AWS credentials
