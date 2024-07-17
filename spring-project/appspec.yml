@@ -11,6 +11,16 @@ permissions:
     owner: ubuntu
     group: ubuntu
     mode: 755
+  - object: /home/ubuntu/spring-project
+    pattern: "*.jar"
+    owner: ubuntu
+    group: ubuntu
+    mode: 644
+  - object: /home/ubuntu/spring-project
+    pattern: "*.sh"
+    owner: ubuntu
+    group: ubuntu
+    mode: 755
 
 hooks:
   ApplicationStart:
