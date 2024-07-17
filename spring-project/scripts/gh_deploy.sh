@@ -1,6 +1,13 @@
 #!/bin/bash
 set -e
 
+# debug
+# 디버그 정보 출력
+echo "Current user: $(whoami)"
+echo "Current directory: $(pwd)"
+echo "Script location: $0"
+
+
 # 필요한 디렉토리 생성 및 권한 설정
 sudo mkdir -p /home/ubuntu/spring-project
 sudo chown -R ubuntu:ubuntu /home/ubuntu/spring-project
