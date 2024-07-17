@@ -24,15 +24,16 @@ jobs:
           java-version: 11
 
       - name: Grant execute permission for gradlew
-        run: chmod +x ./gradlew
+        run: chmod +x ./spring-project/gradlew
         shell: bash
 
       - name: Build with Gradle
+        working-directory: ./spring-proejct
         run: ./gradlew build
         shell: bash
 
       - name: Make zip file
-        run: zip -r ./$GITHUB_SHA .
+        run: zip -r ./$GITHUB_SHA ./spring-project
         shell: bash
 
       - name: Configure AWS credentials
