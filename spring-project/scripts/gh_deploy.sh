@@ -42,22 +42,22 @@ JAR_NAME=$(basename $BUILD_JAR)
 
 echo "> build 파일명: $JAR_NAME" >> $DEPLOY_LOG_PATH
 
-# 실행 중인 애플리케이션 종료
-echo "> 현재 동작중인 애플리케이션 pid 체크" >> $DEPLOY_LOG_PATH
-CURRENT_PID=$(pgrep -f $JAR_NAME)
-
-if [ -z $CURRENT_PID ]; then
-  echo "> 현재 동작중인 애플리케이션 존재 X" >> $DEPLOY_LOG_PATH
-else
-  echo "> 현재 동작중인 애플리케이션 존재 O (PID: $CURRENT_PID)" >> $DEPLOY_LOG_PATH
-  echo "> 현재 동작중인 애플리케이션 종료 진행" >> $DEPLOY_LOG_PATH
-  kill -15 $CURRENT_PID
-  sleep 5
-  if kill -0 $CURRENT_PID 2>/dev/null; then
-    echo "> 애플리케이션이 정상적으로 종료되지 않았습니다. 강제 종료합니다." >> $DEPLOY_LOG_PATH
-    kill -9 $CURRENT_PID
-  fi
-fi
+## 실행 중인 애플리케이션 종료
+#echo "> 현재 동작중인 애플리케이션 pid 체크" >> $DEPLOY_LOG_PATH
+#CURRENT_PID=$(pgrep -f $JAR_NAME)
+#
+#if [ -z $CURRENT_PID ]; then
+#  echo "> 현재 동작중인 애플리케이션 존재 X" >> $DEPLOY_LOG_PATH
+#else
+#  echo "> 현재 동작중인 애플리케이션 존재 O (PID: $CURRENT_PID)" >> $DEPLOY_LOG_PATH
+#  echo "> 현재 동작중인 애플리케이션 종료 진행" >> $DEPLOY_LOG_PATH
+#  kill -15 $CURRENT_PID
+#  sleep 5
+#  if kill -0 $CURRENT_PID 2>/dev/null; then
+#    echo "> 애플리케이션이 정상적으로 종료되지 않았습니다. 강제 종료합니다." >> $DEPLOY_LOG_PATH
+#    kill -9 $CURRENT_PID
+#  fi
+#fi
 
 # 새 애플리케이션 배포
 echo "> $JAR_NAME 배포" >> $DEPLOY_LOG_PATH
