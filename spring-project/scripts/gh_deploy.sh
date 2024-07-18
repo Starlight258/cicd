@@ -1,6 +1,9 @@
 #!/bin/bash
 set -ex
 
+echo "Current user: $(whoami)" >> $DEPLOY_LOG_PATH
+echo "Current user's groups: $(groups)" >> $DEPLOY_LOG_PATH
+
 # 먼저 변수들을 정의합니다.
 DEPLOY_DIR="/home/ubuntu/spring-project"
 PROJECT_NAME="spring-project"
