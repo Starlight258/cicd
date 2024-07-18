@@ -1,9 +1,6 @@
 #!/bin/bash
 set -ex
 
-echo "Current user: $(whoami)" >> $DEPLOY_LOG_PATH
-echo "Current user's groups: $(groups)" >> $DEPLOY_LOG_PATH
-
 # 먼저 변수들을 정의합니다.
 DEPLOY_DIR="/home/ubuntu/spring-project"
 PROJECT_NAME="spring-project"
@@ -11,11 +8,24 @@ DEPLOY_LOG_PATH="$DEPLOY_DIR/deploy.log"
 DEPLOY_ERR_LOG_PATH="$DEPLOY_DIR/deploy_err.log"
 APPLICATION_LOG_PATH="$DEPLOY_DIR/application.log"
 
-# 로그 파일이 존재하지 않으면 생성합니다.
-mkdir -p $(dirname $DEPLOY_LOG_PATH)
-touch $DEPLOY_LOG_PATH
+# 변수 설정 확인
+echo "DEPLOY_DIR: $DEPLOY_DIR"
+echo "PROJECT_NAME: $PROJECT_NAME"
+echo "DEPLOY_LOG_PATH: $DEPLOY_LOG_PATH"
+echo "DEPLOY_ERR_LOG_PATH: $DEPLOY_ERR_LOG_PATH"
+echo "APPLICATION_LOG_PATH: $APPLICATION_LOG_PATH"
 
-echo "Deployment script started" >> $DEPLOY_LOG_PATH
+# 현재 사용자 및 작업 디렉토리 확인
+echo "Current user: $(whoami)"
+echo "Current directory: $(pwd)"
+echo "Contents of current directory: $(ls -la)"
+
+# 로그 디렉토리 생성 및 권한 설정
+mkdir -p "$(dirname "$DEPLOY_LOG_PATH")"
+touch "$DEPLOY_LOG_PATH"
+chmod 644 "$DEPLOY_LOG_PATH"
+
+echo "Deployment script started" >> "$DEPLOY_LOG_PATH"
 
 # 배포 디렉토리로 이동
 cd $DEPLOY_DIR || { echo "Failed to change directory to $DEPLOY_DIR" >> $DEPLOY_ERR_LOG_PATH; exit 1; }
