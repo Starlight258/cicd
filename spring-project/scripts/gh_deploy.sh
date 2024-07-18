@@ -15,7 +15,7 @@ touch $DEPLOY_LOG_PATH
 echo "Deployment script started" >> $DEPLOY_LOG_PATH
 
 # 배포 디렉토리로 이동
-cd $DEPLOY_DIR || exit 1
+cd $DEPLOY_DIR || { echo "Failed to change directory to $DEPLOY_DIR" >> $DEPLOY_ERR_LOG_PATH; exit 1; }
 echo "Changed to directory: $(pwd)" >> $DEPLOY_LOG_PATH
 
 JAR_PATH="$DEPLOY_DIR/build/libs/*.jar"
@@ -23,9 +23,13 @@ JAR_PATH="$DEPLOY_DIR/build/libs/*.jar"
 echo "===== 배포 시작 : $(date +%c) =====" >> $DEPLOY_LOG_PATH
 
 echo "Listing build/libs directory:" >> $DEPLOY_LOG_PATH
-ls -la $DEPLOY_DIR/build/libs >> $DEPLOY_LOG_PATH
+ls -la $DEPLOY_DIR/build/libs >> $DEPLOY_LOG_PATH 2>> $DEPLOY_ERR_LOG_PATH
 
 BUILD_JAR=$(find $JAR_PATH -name '*.jar' | head -n 1)
+if [ -z "$BUILD_JAR" ]; then
+    echo "No JAR file found in $JAR_PATH" >> $DEPLOY_ERR_LOG_PATH
+    exit 1
+fi
 JAR_NAME=$(basename $BUILD_JAR)
 
 echo "> build 파일명: $JAR_NAME" >> $DEPLOY_LOG_PATH
@@ -48,7 +52,7 @@ else
 fi
 
 echo "> $JAR_NAME 배포" >> $DEPLOY_LOG_PATH
-nohup java -jar $BUILD_JAR > $APPLICATION_LOG_PATH 2> $DEPLOY_ERR_LOG_PATH &
+nohup java -jar $BUILD_JAR > $APPLICATION_LOG_PATH 2>> $DEPLOY_ERR_LOG_PATH &
 
 DEPLOY_PID=$!
 echo "> 배포된 애플리케이션 PID: $DEPLOY_PID" >> $DEPLOY_LOG_PATH
@@ -59,6 +63,7 @@ if kill -0 $DEPLOY_PID 2>/dev/null; then
   echo "> 애플리케이션이 성공적으로 실행되었습니다." >> $DEPLOY_LOG_PATH
 else
   echo "> 애플리케이션 실행 실패. 로그를 확인하세요." >> $DEPLOY_LOG_PATH
+  echo "> 애플리케이션 실행 실패. 로그를 확인하세요." >> $DEPLOY_ERR_LOG_PATH
   exit 1
 fi
 
