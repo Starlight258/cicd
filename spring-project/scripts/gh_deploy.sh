@@ -1,6 +1,15 @@
 #!/bin/bash
 set -ex
 
+# pgrep 테스트
+echo "Testing pgrep command..."
+SSHD_PID=$(pgrep -f sshd)
+if [ -z "$SSHD_PID" ]; then
+    echo "Failed to execute pgrep or find sshd process"
+else
+    echo "pgrep test successful. Found sshd process with PID: $SSHD_PID"
+fi
+
 # 변수 정의
 DEPLOY_DIR="/home/ubuntu/spring-project"
 PROJECT_NAME="spring-project"
